@@ -2,14 +2,15 @@ package controller
 
 import (
 	"bytes"
-	"distributed/dto"
-	"distributed/qutils"
-	"distributed/web/model"
 	"encoding/gob"
-	"github.com/gorilla/websocket"
-	"github.com/streadway/amqp"
 	"net/http"
 	"sync"
+
+	"github.com/ericxiao417/sensor-farm/dto"
+	"github.com/ericxiao417/sensor-farm/qutils"
+	"github.com/ericxiao417/sensor-farm/web/model"
+	"github.com/gorilla/websocket"
+	"github.com/streadway/amqp"
 )
 
 const url = "amqp://guest:guest@localhost:5672"
@@ -67,11 +68,11 @@ func (wsc *websocketController) removeSocket(socket *websocket.Conn) {
 func (wsc *websocketController) listenForSources() {
 	q := qutils.GetQueue("", wsc.ch, true)
 	wsc.ch.QueueBind(
-		q.Name, //name string,
-		"",     //key string,
+		q.Name,                      //name string,
+		"",                          //key string,
 		qutils.WebappSourceExchange, //exchange string,
-		false, //noWait bool,
-		nil)   //args amqp.Table)
+		false,                       //noWait bool,
+		nil)                         //args amqp.Table)
 
 	msgs, _ := wsc.ch.Consume(
 		q.Name, //queue string,
@@ -97,11 +98,11 @@ func (wsc *websocketController) listenForSources() {
 func (wsc *websocketController) listenForMessages() {
 	q := qutils.GetQueue("", wsc.ch, true)
 	wsc.ch.QueueBind(
-		q.Name, //name string,
-		"",     //key string,
+		q.Name,                        //name string,
+		"",                            //key string,
 		qutils.WebappReadingsExchange, //exchange string,
-		false, //noWait bool,
-		nil)   //args amqp.Table)
+		false,                         //noWait bool,
+		nil)                           //args amqp.Table)
 
 	msgs, _ := wsc.ch.Consume(
 		q.Name, //queue string,
@@ -157,11 +158,11 @@ func (wsc *websocketController) listenForDiscoveryRequests(socket *websocket.Con
 
 		if msg.Type == "discover" {
 			wsc.ch.Publish(
-				"", //exchange string,
+				"",                          //exchange string,
 				qutils.WebappDiscoveryQueue, //key string,
-				false,             //mandatory bool,
-				false,             //immediate bool,
-				amqp.Publishing{}) //msg amqp.Publishing)
+				false,                       //mandatory bool,
+				false,                       //immediate bool,
+				amqp.Publishing{})           //msg amqp.Publishing)
 		}
 	}
 }

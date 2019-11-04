@@ -1,8 +1,9 @@
 package main
 
 import (
-	"distributed/web/controller"
 	"net/http"
+
+	"github.com/ericxiao417/sensor-farm/web/controller"
 )
 
 func main() {
